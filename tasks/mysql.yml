@@ -10,7 +10,7 @@
     cache_valid_time: 3600
   vars:
     packages:
-    - python-lxml
+    - "{{ keycloak_python_lxml }}"
     - unzip
 
 - name: get mysql connector
@@ -56,8 +56,8 @@
         name: "mysql"
         module: "com.mysql"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -66,8 +66,8 @@
     add_children:
     - driver-class: "com.mysql.cj.jdbc.Driver"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -75,8 +75,8 @@
     xpath: /srv:server/srv:profile/sub:subsystem/sub:datasources/sub:datasource[@jndi-name="java:jboss/datasources/KeycloakDS"]/@use-java-context
     state: absent
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -84,8 +84,8 @@
     xpath: /srv:server/srv:profile/sub:subsystem/sub:datasources/sub:datasource[@jndi-name="java:jboss/datasources/KeycloakDS"]/sub:connection-url
     value: "jdbc:mysql://{{ keycloak_mysql_host }}:{{ keycloak_mysql_port }}/{{ keycloak_mysql_database }}?useSSL=false&characterEncoding=UTF-8"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -93,8 +93,8 @@
     xpath: /srv:server/srv:profile/sub:subsystem/sub:datasources/sub:datasource[@jndi-name="java:jboss/datasources/KeycloakDS"]/sub:driver
     value: "mysql"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -102,8 +102,8 @@
     xpath: /srv:server/srv:profile/sub:subsystem/sub:datasources/sub:datasource[@jndi-name="java:jboss/datasources/KeycloakDS"]/sub:security/sub:user-name
     value: "{{ keycloak_mysql_user }}"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -111,8 +111,8 @@
     xpath: /srv:server/srv:profile/sub:subsystem/sub:datasources/sub:datasource[@jndi-name="java:jboss/datasources/KeycloakDS"]/sub:security/sub:password
     value: "{{ keycloak_mysql_password }}"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -122,8 +122,8 @@
     - pool
     - validation
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -133,8 +133,8 @@
     - min-pool-size: "5"
     - max-pool-size: "15"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
 
 - name: modify standalone.xml
   xml:
@@ -147,7 +147,17 @@
     - exception-sorter:
         class-name: "org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"
     namespaces:
-      srv: urn:jboss:domain:10.0
-      sub: urn:jboss:domain:datasources:5.0
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: "{{ keycloak_sub_namespace }}"
+
+- name: modify standalone.xml
+  xml:
+    path: "{{ keycloak_jboss_home }}/standalone/configuration/standalone.xml"
+    xpath: /srv:server/srv:profile/sub:subsystem/sub:coordinator-environment
+    attribute: default-timeout
+    value: "{{ keycloak_jboss_timeout }}"
+    namespaces:
+      srv: "{{ keycloak_srv_namespace }}"
+      sub: urn:jboss:domain:transactions:5.0
 
 ...

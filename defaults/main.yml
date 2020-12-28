@@ -18,5 +18,9 @@ keycloak_mysql_user: keycloak
 keycloak_mysql_password: keycloak
 keycloak_mysql_database: keycloak
 keycloak_mysql_port: 3306
+keycloak_python_lxml: python-lxml
+keycloak_srv_namespace: 'urn:jboss:domain:10.0'
+keycloak_sub_namespace: 'urn:jboss:domain:datasources:5.0'
+keycloak_jboss_timeout: "300"
 
 ...
